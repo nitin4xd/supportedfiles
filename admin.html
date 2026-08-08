@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link 
+rel="stylesheet" 
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+
+<body 
+onload="
+checkAdmin();
+loadUsers();
+dashboardStats();
+">
+
+
+<div class="dashboard-layout">
+
+
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+
+<h2>
+<i class="fa-solid fa-user-shield"></i>
+Admin Panel
+</h2>
+
+
+
+<a href="#">
+<i class="fa-solid fa-chart-line"></i>
+Dashboard
+</a>
+
+
+<a href="#users">
+<i class="fa-solid fa-users"></i>
+Users
+</a>
+
+
+<a href="#" onclick="darkMode()">
+
+<i class="fa-solid fa-moon"></i>
+Dark Mode
+
+</a>
+
+
+
+<a href="#" onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+Logout
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+<!-- MAIN CONTENT -->
+
+
+<div class="main-content">
+
+
+
+<div class="topbar">
+
+
+<h1>
+Admin Dashboard
+</h1>
+
+
+<div>
+
+<button class="btn btn-danger"
+onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<!-- STAT CARDS -->
+
+
+<div class="cards">
+
+
+
+<div class="card">
+
+<h3>
+Total Users
+</h3>
+
+<h1 id="totalUsers">
+0
+</h1>
+
+</div>
+
+
+
+
+<div class="card">
+
+<h3>
+Total Admin
+</h3>
+
+<h1 id="totalAdmin">
+0
+</h1>
+
+</div>
+
+
+
+
+<div class="card">
+
+<h3>
+System
+</h3>
+
+<h1>
+Active
+</h1>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- CREATE USER -->
+
+
+<div class="card">
+
+
+<h2>
+Create New User
+</h2>
+
+
+
+<input 
+type="text"
+id="newUsername"
+placeholder="Enter Username">
+
+
+
+<input 
+type="password"
+id="newPassword"
+placeholder="Enter Password">
+
+
+
+<button 
+class="btn btn-success"
+onclick="createUser()">
+
+<i class="fa-solid fa-user-plus"></i>
+
+Create User
+
+</button>
+
+
+
+</div>
+
+
+<!-- CHANGE ADMIN PASSWORD -->
+
+<div class="card">
+
+<h2>
+<i class="fa-solid fa-key"></i>
+Change Admin Password
+</h2>
+
+
+<input
+type="password"
+id="oldAdminPassword"
+placeholder="Current Password">
+
+
+
+<input
+type="password"
+id="newAdminPassword"
+placeholder="New Password">
+
+
+
+<input
+type="password"
+id="confirmAdminPassword"
+placeholder="Confirm New Password">
+
+
+
+<button 
+class="btn btn-success"
+onclick="changeAdminPassword()">
+
+<i class="fa-solid fa-lock"></i>
+
+Update Password
+
+</button>
+
+
+</div>
+
+
+<!-- USER MANAGEMENT -->
+
+<div 
+class="table-box"
+id="users">
+
+
+<h2>
+User Management
+</h2>
+
+
+
+<br>
+
+
+
+<input
+type="text"
+id="search"
+onkeyup="searchUser()"
+placeholder="Search User">
+
+
+
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>
+Username
+</th>
+
+
+<th>
+Created Date
+</th>
+
+
+<th>
+Last Login
+</th>
+
+
+<th>
+Action
+</th>
+
+
+</tr>
+
+</thead>
+
+
+
+<tbody id="userTable">
+
+
+</tbody>
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- ACTIVITY LOG -->
+
+
+<div class="table-box">
+
+
+<h2>
+Activity Log
+</h2>
+
+
+<div id="logs">
+
+No activity yet
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<script src="js/script.js"></script>
+
+
+</body>
+
+</html>

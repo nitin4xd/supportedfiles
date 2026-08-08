@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>User Dashboard</title>
+
+
+<link rel="stylesheet" href="css/style.css">
+
+
+<link 
+rel="stylesheet" 
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+</head>
+
+
+
+<body 
+onload="
+checkUser();
+loadProfile();
+">
+
+
+
+<div class="dashboard-layout">
+
+
+
+<!-- SIDEBAR -->
+
+
+<div class="sidebar">
+
+
+<h2>
+
+<i class="fa-solid fa-user"></i>
+
+User Panel
+
+</h2>
+
+
+
+<a href="#">
+
+<i class="fa-solid fa-house"></i>
+
+Dashboard
+
+</a>
+
+
+
+<a href="#profile">
+
+<i class="fa-solid fa-id-card"></i>
+
+Profile
+
+</a>
+
+
+
+<a href="#" onclick="darkMode()">
+
+<i class="fa-solid fa-moon"></i>
+
+Dark Mode
+
+</a>
+
+
+
+<a href="#" onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+Logout
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- MAIN AREA -->
+
+
+<div class="main-content">
+
+
+
+<div class="topbar">
+
+
+<h1>
+User Dashboard
+</h1>
+
+
+
+<button 
+class="btn btn-danger"
+onclick="logout()">
+
+Logout
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="cards">
+
+
+
+<div class="card">
+
+
+<h3>
+Welcome
+</h3>
+
+
+<h2 id="profileName">
+
+User
+
+</h2>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+Account Status
+</h3>
+
+
+<h2>
+Active
+</h2>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h3>
+Role
+</h3>
+
+
+<h2>
+User
+</h2>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div 
+class="table-box"
+id="profile">
+
+
+<h2>
+My Profile
+</h2>
+
+
+<br>
+
+
+<table>
+
+
+<tr>
+
+<th>
+Username
+</th>
+
+<td id="usernameView">
+
+</td>
+
+
+</tr>
+
+
+
+<tr>
+
+<th>
+Role
+</th>
+
+<td>
+User
+</td>
+
+
+</tr>
+
+
+
+
+<tr>
+
+<th>
+Last Login
+</th>
+
+
+<td id="lastLogin">
+
+</td>
+
+
+</tr>
+
+
+
+<tr>
+
+<th>
+Created Date
+</th>
+
+
+<td id="createdDate">
+
+</td>
+
+
+</tr>
+
+
+
+</table>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+Account Information
+</h2>
+
+
+<p>
+
+आप अपने account की जानकारी यहाँ देख सकते हैं।
+
+</p>
+
+
+<p>
+
+Password या account management के लिए admin से संपर्क करें।
+
+</p>
+
+</div>
+</div>
+</div>
+<script src="js/script.js"></script>
+<script>
+
+
+function loadProfile(){
+
+
+let user = 
+JSON.parse(
+localStorage.getItem("currentUser")
+);
+
+
+
+if(user){
+
+
+document.getElementById(
+"profileName"
+).innerHTML =
+user.username;
+
+
+
+document.getElementById(
+"usernameView"
+).innerHTML =
+user.username;
+
+
+
+document.getElementById(
+"lastLogin"
+).innerHTML =
+user.lastLogin;
+
+
+
+document.getElementById(
+"createdDate"
+).innerHTML =
+user.created;
+
+
+
+}
+
+
+
+}
+
+
+
+</script>
+
+<a href="https://drive.google.com/drive/folders/1lPwbu22U9vUWF0GIvzCSiSuSI-eTwrSe?usp=drive_link" target="_blank">
+    Click here for Software Download.
+</a>
+</body>
+
+
+</html>
