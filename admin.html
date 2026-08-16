@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+
+<body
+onload="
+checkAdmin();
+loadUsers();
+dashboardStats();
+loadLogs();
+loadRecentLogs();
+loadLogUsers();
+">
+
+
+<div class="dashboard-layout">
+
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h2>
+<i class="fa-solid fa-user-shield"></i>
+Admin Panel
+</h2>
+
+
+<a href="#">
+<i class="fa-solid fa-chart-line"></i>
+Dashboard
+</a>
+
+
+<a href="#users">
+<i class="fa-solid fa-users"></i>
+Users
+</a>
+
+
+<a href="#" onclick="darkMode()">
+
+<i class="fa-solid fa-moon"></i>
+Dark Mode
+
+</a>
+
+
+<a href="#" onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+Logout
+
+</a>
+
+
+</div>
+
+
+<!-- MAIN CONTENT -->
+
+<div class="main-content">
+
+
+<div class="topbar">
+
+<h1>
+Admin Dashboard
+</h1>
+
+
+<div>
+
+<button
+class="btn btn-danger"
+onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
+
+</div>
+
+
+<!-- STAT CARDS -->
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>
+Total Users
+</h3>
+
+<h1 id="totalUsers">
+0
+</h1>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Active Users
+</h3>
+
+<h1 id="activeUsers">
+0
+</h1>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Never Logged In
+</h3>
+
+<h1 id="neverLoggedIn">
+0
+</h1>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Inactive Users
+</h3>
+
+<h1 id="inactiveUsers">
+0
+</h1>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+Total Admin
+</h3>
+
+<h1 id="totalAdmin">
+0
+</h1>
+
+</div>
+
+
+<div class="card">
+
+<h2>
+Recent Activity
+</h2>
+
+<div id="recentLogs">
+Loading...
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>
+System
+</h3>
+
+<h1>
+Active
+</h1>
+
+</div>
+
+
+</div>
+
+
+<!-- CREATE USER -->
+
+<div class="card">
+
+<h2>
+Create New User
+</h2>
+
+
+<input
+type="text"
+id="newUsername"
+placeholder="Enter Username">
+
+
+<input
+type="password"
+id="newPassword"
+placeholder="Enter Password">
+
+
+<button
+class="btn btn-success"
+onclick="createUser()">
+
+<i class="fa-solid fa-user-plus"></i>
+
+Create User
+
+</button>
+
+</div>
+
+
+<!-- CHANGE ADMIN PASSWORD -->
+
+<div class="card">
+
+<h2>
+<i class="fa-solid fa-key"></i>
+Change Admin Password
+</h2>
+
+
+<input
+type="password"
+id="oldAdminPassword"
+placeholder="Current Password">
+
+
+<input
+type="password"
+id="newAdminPassword"
+placeholder="New Password">
+
+
+<input
+type="password"
+id="confirmAdminPassword"
+placeholder="Confirm New Password">
+
+
+<button
+class="btn btn-success"
+onclick="changeAdminPassword()">
+
+<i class="fa-solid fa-lock"></i>
+
+Update Password
+
+</button>
+
+</div>
+
+
+<!-- DATABASE BACKUP -->
+
+<div class="card">
+
+<h2>
+<i class="fa-solid fa-database"></i>
+Database Backup
+</h2>
+
+<p>
+Users और Activity Logs का database backup डाउनलोड करें।
+</p>
+
+<button
+class="btn btn-success"
+onclick="downloadBackup()">
+
+<i class="fa-solid fa-download"></i>
+
+Download Database Backup
+
+</button>
+
+</div>
+
+
+<!-- VERIFY BACKUP -->
+
+<div class="card">
+
+<h2>
+<i class="fa-solid fa-file-circle-check"></i>
+Verify Backup
+</h2>
+
+
+<input
+type="file"
+id="backupFile"
+accept=".sql">
+
+
+<button
+class="btn btn-success"
+onclick="verifyBackup()">
+
+<i class="fa-solid fa-check"></i>
+
+Verify Backup
+
+</button>
+
+
+<p id="backupResult"></p>
+
+</div>
+
+
+<!-- USER MANAGEMENT -->
+
+<div
+class="table-box"
+id="users">
+
+<h2>
+User Management
+</h2>
+
+
+<br>
+
+
+<input
+type="text"
+id="search"
+onkeyup="searchUser()"
+placeholder="Search User">
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Username
+</th>
+
+
+<th>
+Created Date
+</th>
+
+
+<th>
+Last Login
+</th>
+
+
+<th>
+Action
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="userTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- ACTIVITY LOG -->
+
+<div class="table-box">
+
+<h2>
+Activity Log
+</h2>
+
+
+<div style="margin:15px 0;">
+
+<label>
+Activity Date:
+</label>
+
+
+<!-- DATE FILTER -->
+
+<input
+    type="date"
+    id="logDate"
+    onchange="logDateCleared = false; currentLogPage = 1; loadLogs(1);"
+    style="padding:10px;"
+>
+
+<!-- CLEAR DATE -->
+
+<button
+    type="button"
+    class="btn"
+    onclick="
+        document.getElementById('logDate').value = '';
+        currentLogPage = 1;
+        totalLogPages = 1;
+        loadLogs(1);
+    "
+>
+    Clear Date
+</button>
+
+
+<!-- SEARCH -->
+
+<input
+type="text"
+id="logSearch"
+placeholder="Search activity..."
+onkeyup="filterLogs()"
+style="
+padding:10px;
+width:100%;
+max-width:400px;
+margin-top:10px;
+">
+
+
+<!-- CLEAR SEARCH -->
+
+<button
+class="btn"
+onclick="clearLogSearch()">
+
+Clear Search
+
+</button>
+
+
+<!-- CLEAR ALL -->
+
+<button
+class="btn btn-danger"
+onclick="clearAllLogs()">
+
+Clear All Logs
+
+</button>
+
+
+<!-- USER FILTER -->
+
+<select
+    id="logUserFilter"
+    onchange="filterLogs()"
+    style="
+        padding:10px;
+        margin-top:10px;
+        width:100%;
+        max-width:400px;
+    "
+>
+
+    <option value="all">
+        All Users
+    </option>
+
+</select>
+
+
+<!-- ACTIVITY FILTER -->
+
+<select
+id="logFilter"
+onchange="filterLogs()"
+style="
+padding:10px;
+margin-top:10px;
+width:100%;
+max-width:400px;
+">
+
+<option value="all">
+All Activities
+</option>
+
+<option value="login">
+Login
+</option>
+
+<option value="logout">
+Logout
+</option>
+
+<option value="created">
+Create User
+</option>
+
+<option value="deleted">
+Delete User
+</option>
+
+<option value="activated">
+Activate
+</option>
+
+<option value="deactivated">
+Deactivate
+</option>
+
+<option value="password">
+Password Change
+</option>
+
+<option value="backup">
+Database Backup
+</option>
+
+</select>
+
+</div>
+
+
+<div id="logs">
+
+No activity yet
+
+</div>
+
+<!-- ACTIVITY LOG PAGINATION -->
+
+<div
+    id="logPagination"
+    style="
+        margin-top:20px;
+        display:flex;
+        gap:8px;
+        align-items:center;
+        flex-wrap:wrap;
+    "
+>
+
+    <button
+        class="btn"
+        id="prevLogPage"
+        onclick="changeLogPage(-1)"
+    >
+        ← Previous
+    </button>
+
+    <span id="logPageInfo">
+        Page 1
+    </span>
+
+    <button
+        class="btn"
+        id="nextLogPage"
+        onclick="changeLogPage(1)"
+    >
+        Next →
+    </button>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script src="js/script.js"></script>
+
+
+<script>
+
+/* =========================================
+   DATABASE BACKUP
+========================================= */
+
+async function downloadBackup(){
+
+    try{
+
+        const response =
+            await fetch("backup.php");
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "Backup failed"
+            );
+
+        }
+
+
+        const blob =
+            await response.blob();
+
+
+        const url =
+            window.URL.createObjectURL(blob);
+
+
+        const a =
+            document.createElement("a");
+
+
+        a.href = url;
+
+
+        a.download =
+            "admin_panel_backup.sql";
+
+
+        document.body.appendChild(a);
+
+
+        a.click();
+
+
+        a.remove();
+
+
+        window.URL.revokeObjectURL(url);
+
+
+        await loadLogs();
+
+        await loadRecentLogs();
+
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        alert(
+            "Backup download failed"
+        );
+
+    }
+
+}
+
+
+/* =========================================
+   VERIFY BACKUP
+========================================= */
+
+async function verifyBackup(){
+
+    const fileInput =
+        document.getElementById(
+            "backupFile"
+        );
+
+
+    const resultBox =
+        document.getElementById(
+            "backupResult"
+        );
+
+
+    if(!fileInput.files.length){
+
+        resultBox.innerHTML =
+            "❌ पहले backup file select करें";
+
+        return;
+
+    }
+
+
+    const formData =
+        new FormData();
+
+
+    formData.append(
+        "backup",
+        fileInput.files[0]
+    );
+
+
+    try{
+
+        const response =
+            await fetch(
+                "verify-backup.php",
+                {
+                    method:"POST",
+                    body:formData
+                }
+            );
+
+
+        if(!response.ok){
+
+            throw new Error(
+                "Server error: " +
+                response.status
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if(result.success){
+
+            resultBox.innerHTML =
+                "✅ Backup verified successfully";
+
+        }
+        else{
+
+            resultBox.innerHTML =
+                "❌ " +
+                result.message;
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        resultBox.innerHTML =
+            "❌ Verification failed";
+
+    }
+
+}
+
+
+/* =========================================
+   ACTIVITY LOG FILTER
+========================================= */
+
+function filterLogs(){
+
+    const searchElement =
+        document.getElementById(
+            "logSearch"
+        );
+
+
+    const filterElement =
+        document.getElementById(
+            "logFilter"
+        );
+
+
+    const dateElement =
+        document.getElementById(
+            "logDate"
+        );
+
+
+    const search =
+        searchElement
+        ? searchElement.value
+            .toLowerCase()
+            .trim()
+        : "";
+
+
+    const filter =
+        filterElement
+        ? filterElement.value
+            .toLowerCase()
+        : "all";
+
+
+    const selectedDate =
+        dateElement
+        ? dateElement.value
+        : "";
+
+
+    /*
+     * Selected date:
+     *
+     * 2026-08-13
+     *
+     * Log date:
+     *
+     * 13-08-2026
+     */
+
+    let formattedDate = "";
+
+
+    if(selectedDate){
+
+        const parts =
+            selectedDate.split("-");
+
+
+        if(parts.length === 3){
+
+            formattedDate =
+                parts[2] +
+                "-" +
+                parts[1] +
+                "-" +
+                parts[0];
+
+        }
+
+    }
+
+
+    const items =
+        document.querySelectorAll(
+            ".activity-item"
+        );
+
+
+    items.forEach(item => {
+
+
+        const text =
+            item.innerText
+            .toLowerCase();
+
+
+        /* SEARCH */
+
+        let searchMatch =
+            text.includes(search);
+
+
+        /* ACTIVITY */
+
+        let filterMatch = true;
+
+
+        if(filter === "login"){
+
+            filterMatch =
+                text.includes(
+                    "logged in"
+                );
+
+        }
+
+
+        else if(filter === "logout"){
+
+            filterMatch =
+                text.includes(
+                    "logged out"
+                );
+
+        }
+
+
+        else if(filter === "created"){
+
+            filterMatch =
+                text.includes(
+                    "created user"
+                );
+
+        }
+
+
+        else if(filter === "deleted"){
+
+            filterMatch =
+                text.includes(
+                    "deleted user"
+                );
+
+        }
+
+
+        else if(filter === "activated"){
+
+            filterMatch =
+                text.includes(
+                    "activated"
+                ) &&
+                !text.includes(
+                    "deactivated"
+                );
+
+        }
+
+
+        else if(filter === "deactivated"){
+
+            filterMatch =
+                text.includes(
+                    "deactivated"
+                );
+
+        }
+
+
+        else if(filter === "password"){
+
+            filterMatch =
+                text.includes(
+                    "password"
+                );
+
+        }
+
+
+        else if(filter === "backup"){
+
+            filterMatch =
+                text.includes(
+                    "database backup"
+                );
+
+        }
+
+
+        /* DATE */
+
+        let dateMatch = true;
+
+
+        if(formattedDate){
+
+            const small =
+                item.querySelector(
+                    "small"
+                );
+
+
+            if(small){
+
+                const timeText =
+                    small.innerText
+                    .trim();
+
+
+                /*
+                 * Example:
+                 *
+                 * 13-08-2026 01:02:10
+                 */
+
+                const activityDate =
+                    timeText.substring(
+                        0,
+                        10
+                    );
+
+
+                dateMatch =
+                    activityDate ===
+                    formattedDate;
+
+            }
+            else{
+
+                dateMatch = false;
+
+            }
+
+        }
+
+
+        /* FINAL */
+
+        if(
+            searchMatch &&
+            filterMatch &&
+            dateMatch
+        ){
+
+            item.style.display =
+                "";
+
+        }
+        else{
+
+            item.style.display =
+                "none";
+
+        }
+
+    });
+
+}
+
+
+/* =========================================
+   CLEAR DATE
+========================================= */
+
+function clearLogDate(){
+
+    const dateBox =
+        document.getElementById(
+            "logDate"
+        );
+
+
+    if(dateBox){
+
+        dateBox.value = "";
+
+    }
+
+
+    //filterLogs();
+
+}
+
+
+/* =========================================
+   CLEAR SEARCH
+========================================= */
+
+function clearLogSearch(){
+
+    const searchBox =
+        document.getElementById(
+            "logSearch"
+        );
+
+
+    if(searchBox){
+
+        searchBox.value = "";
+
+    }
+
+
+    //filterLogs();
+
+}
+
+
+/* =========================================
+   ADMIN SESSION
+========================================= */
+
+async function checkAdminSession(){
+
+    try{
+
+        const response =
+            await fetch(
+                "check-session.php"
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if(
+            !result.loggedIn ||
+            result.role !== "admin"
+        ){
+
+            window.location.href =
+                "index.html";
+
+            return;
+
+        }
+
+    }
+    catch(error){
+
+        console.error(error);
+
+        window.location.href =
+            "index.html";
+
+    }
+
+}
+
+
+checkAdminSession();
+
+</script>
+
+
+</body>
+
+</html>
